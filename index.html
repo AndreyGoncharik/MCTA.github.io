@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ru">
+<head>   
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	
+    <title>getStatus psMCTA</title>
+	
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	
+	<style>	
+		body {
+            font-family: Roboto;
+            display: flex;
+            flex-direction: column;
+            min-height: 95vh;
+			background-color:#c2c2c20d;
+            }
+        section {
+            display:flex;
+			flex-direction:column;
+            width: 320px ;
+			max-width:320px !important;
+            min-height: 420px;
+            background-color:#fff;
+			box-shadow: 0 -2px 6px rgba(14,21,47,.02), 0 6px 18px rgba(14,21,47,.05);
+            padding: 15px 5px;
+            margin: 10px auto;
+            }
+		p {
+			 margin:2px 0;
+			 font-size:16px;
+			}
+		label, input {
+			font-size:25px;
+		}	
+	</style>
+</head>
+<body>
+<section style="">  	
+	<div style="width:100%;text-align:center;">
+		<p style="margin-bottom:10px;">psMCTA.log <br> raw status value: </p>
+		<label>0x <input class="inp" type="text" minlength="4" maxlength="4" style="max-width:80px;text-align:center;"></input></label><br>	
+		<button class="skno-status" style="margin:15px auto; width:150px; height:30px;"> Get status</button>
+	</div>	
+	<div class="status-info" style="width:100%;">
+		<p class="s0" style="text-align:center"></p>
+	</div>		
+	<div class="status-info" style="width:100%;padding-left:10px;">
+		<p class="s1"></p>
+		<p class="s2"></p>
+		<p class="s3"></p>
+		<p class="s4"></p>
+		<p class="s5"></p>
+		<p class="s6"></p>	
+		<p class="s7"></p>	
+		<p class="s8"></p>
+		<p class="s9"></p>
+		<p class="s10"></p>
+		<p class="s11"></p>
+		<p class="s12"></p>
+	</div>	
+</section>
+
+<script>
+$(document).ready(function () {
+
+	$('.inp').click(function() {
+		$(this).val('');
+	});
+	
+	$('.inp').on('keyup', function(e){
+		if(e.which == 13) $('.skno-status').click();
+	});
+	
+	$('.skno-status').click( function() {
+	
+		hex = $('.inp').val();
+		hex2bin =  ("00000000" + (parseInt(hex, 16)).toString(2)).substr(-12);
+		
+		$('p').css(' ');
+		
+		if ( hex.length == 0 ) {
+			$('.status-info p').html('');
+			$('.s0').html('Введите raw status value из psMCTA.log');
+			$('.s0').css('color' , 'green');
+		} else if ( hex.length > 0 && hex.length < 4 ) {
+			$('.status-info p').html('');
+			$('.s0').html('Введите 4 последних символа <br> из строки <b>raw status value </b>');
+			$('.s0').css('color' , 'green');
+		} else {
+				
+				$('.s0').html(' ');
+			
+				if ( hex2bin[11] == 0 ) {
+					$('.s1').html('СКНО свободен');
+					$('.s1').css('color' , 'green');
+				} else {
+					$('.s1').html('СКНО занят');
+					$('.s1').css('color' , 'red');
+				}
+				
+				if ( hex2bin[10] == 0 ) {
+					$('.s2').html('СКЗИ нет');
+				} else {
+					$('.s2').html('СКЗИ - ОК');
+				}
+				
+				if ( hex2bin[9] == 0 ) {
+					$('.s3').html('Нет связи с сервером');
+					$('.s3').css('color' , 'red');
+				} else {
+					$('.s3').html('Сервер - ОК');
+					$('.s3').css('color' , 'green');
+				}
+				
+				if ( hex2bin[8] == 0 ) {
+					$('.s4').html('Сертификат СКЗИ - ОК');
+					$('.s4').css('color' , 'black');
+				} else {
+					$('.s4').html('Запрет сертификата СКЗИ');
+					$('.s4').css('color' , 'red');
+				}
+				
+				if ( hex2bin[7] == 0 ) {
+					$('.s5').html('Z-отчёты - ОК');
+					$('.s5').css('color' , 'black');
+				} else {
+					$('.s5').html('Не передан Z-отчёт');
+					$('.s5').css('color' , 'red');
+				}
+				
+				if ( hex2bin[6] == 0 ) {
+					$('.s6').html('Память СКНО - ОК');
+					$('.s6').css('color' , 'black');
+				} else {
+					$('.s6').html('Переполнена память СКНО');
+					$('.s6').css('color' , 'red');
+				}
+				
+				if ( hex2bin[5] == 0 ) {
+					$('.s7').html('Нет идентификации');
+					$('.s7').css('color' , 'red');
+				} else {
+					$('.s7').html('Идентификациия - ОК');
+					$('.s7').css('color' , 'black');
+				}
+
+				if ( hex2bin[4] == 0 ) {
+					$('.s8').html('Смена закрыта');
+				} else {
+					$('.s8').html('Смена открыта');
+				}
+				
+				if ( hex2bin[3] == 0 ) {
+					$('.s9').html('Процедура передачи док-та - ОК');
+					$('.s9').css('color' , 'black');
+				} else {
+					$('.s9').html('Не завершена процедура передачи док.');
+					$('.s9').css('color' , 'red');
+				}	
+				
+				if ( hex2bin[2] == 0 ) {
+					$('.s10').html('Док-ты из памяти СКНО переданы - ОК');
+					$('.s10').css('color' , 'black');
+				} else {
+					$('.s10').html('В памяти СКНО есть непереданный док.');
+					$('.s10').css('color' , 'red');
+				}	
+				
+				if ( hex2bin[1] == 0 ) {
+					$('.s11').html('Размер кассового док-та - ОК');
+					$('.s11').css('color' , 'black');
+				} else {
+					$('.s11').html('Превышен размер кассового док.');
+					$('.s11').css('color' , 'red');
+				}
+
+				if ( hex2bin[0] == 0 ) {
+					$('.s12').html('СКНО не исправно');
+					$('.s12').css('color' , 'red');
+				} else {
+					$('.s12').html('СКНО исправно - ОК');
+					$('.s12').css('color' , 'green');
+				}		
+
+				console.log(hex);
+				console.log(hex2bin);
+		}		
+					
+	});
+	
+});	
+
+</script>
+</body>
+</html>
