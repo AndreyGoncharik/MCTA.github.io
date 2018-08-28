@@ -33,15 +33,24 @@
 			}
 		label, input {
 			font-size:25px;
-		}	
+		}
+		input {
+			max-width:80px;
+			text-align:center;
+			}
+		.skno-status {
+			margin:15px auto;
+			width:150px;
+			height:30px;
+			}
 	</style>
 </head>
 <body>
 <section style="">  	
 	<div style="width:100%;text-align:center;">
 		<p style="margin-bottom:10px;">psMCTA.log <br> raw status value: </p>
-		<label>0x <input class="inp" type="text" minlength="4" maxlength="4" style="max-width:80px;text-align:center;"></input></label><br>	
-		<button class="skno-status" style="margin:15px auto; width:150px; height:30px;"> Get status</button>
+		<label>0x <input class="inp" type="text" maxlength="4"></input></label><br>
+		<button class="skno-status"> Get status</button>
 	</div>	
 	<div class="status-info" style="width:100%;">
 		<p class="s0" style="text-align:center"></p>
