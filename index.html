@@ -6,6 +6,8 @@
 	
     <title>getStatus psMCTA</title>
 	
+	<link rel="manifest" href="/manifest.json">
+	
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 	
 	<style>	
@@ -13,7 +15,7 @@
             font-family: Roboto;
             display: flex;
             flex-direction: column;
-            min-height: 95vh;
+            min-height: 85vh;
 			background-color:#c2c2c20d;
             }
         section {
@@ -49,7 +51,7 @@
 <section style="">  	
 	<div style="width:100%;text-align:center;">
 		<p style="margin-bottom:10px;">psMCTA.log <br> raw status value: </p>
-		<label>0x <input class="inp" type="text" maxlength="4" style="text-transform:uppercase"  onkeyup="var rus=/['А-я',':']/; if(rus.test(this.value)) this.value=''"></input></label><br>
+		<label>0x <input class="inp" type="text" maxlength="4" style="text-transform:uppercase" ></input></label><br>
 		<button class="skno-status"> Get status</button>
 	</div>	
 	<div class="status-info" style="width:100%;">
@@ -79,6 +81,8 @@ $(document).ready(function () {
 	});
 	
 	$('.inp').on('keyup', function(e){
+		 
+		if(/['А-я',':']/.test(this.value)) this.value='';
 		if(e.which == 13) $('.skno-status').click();
 	});
 	
@@ -203,4 +207,18 @@ $(document).ready(function () {
 
 </script>
 </body>
+
+<!-- <script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').then(function(registration) {
+      // Registration was successful
+      console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    }, function(err) {
+      // registration failed :(
+      console.log('ServiceWorker registration failed: ', err);
+    });
+  });
+}
+</script> -->
 </html>
