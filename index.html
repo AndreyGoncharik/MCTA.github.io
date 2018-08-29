@@ -6,28 +6,30 @@
 	
     <title>getStatus psMCTA</title>
 	
-	<link rel="manifest" href="/manifest.json">
+	<!-- <link rel="manifest" href="/manifest.json"> -->
 	
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 	
 	<style>	
-		body {
+		body {		    
             font-family: Roboto;
             display: flex;
             flex-direction: column;
             min-height: 85vh;
 			background-color:#c2c2c20d;
+			box-sizing: border-box;
             }
         section {
             display:flex;
 			flex-direction:column;
-            width: 320px ;
-			max-width:320px !important;
+            width: 95vw ;
+			max-width:340px !important;
             min-height: 420px;
             background-color:#fff;
 			box-shadow: 0 -2px 6px rgba(14,21,47,.02), 0 6px 18px rgba(14,21,47,.05);
             padding: 15px 5px;
             margin: 10px auto;
+			box-sizing: border-box;
             }
 		p {
 			 margin:2px 0;
@@ -45,6 +47,20 @@
 			width:150px;
 			height:30px;
 			}
+		.s13 {
+			text-align:center;			
+		}
+		.s13 span {
+			margin:7px auto;
+			border-bottom:1px dotted grey;
+		}
+		.sec2 {			
+			display:none;
+			padding:15px;
+		}
+		.sec2 p {
+			font-size:14px;
+		}		
 	</style>
 </head>
 <body>
@@ -56,21 +72,28 @@
 	</div>	
 	<div class="status-info" style="width:100%;">
 		<p class="s0" style="text-align:center"></p>
-	</div>		
-	<div class="status-info" style="width:100%;padding-left:10px;">
-		<p class="s1"></p>
-		<p class="s2"></p>
-		<p class="s3"></p>
-		<p class="s4"></p>
-		<p class="s5"></p>
-		<p class="s6"></p>	
-		<p class="s7"></p>	
-		<p class="s8"></p>
-		<p class="s9"></p>
-		<p class="s10"></p>
-		<p class="s11"></p>
-		<p class="s12"></p>
+	</div>
+	<div class="result">	
+		<div class="status-info" style="width:100%;padding-left:10px;">
+			<p class="s1"></p>
+			<p class="s2"></p>
+			<p class="s3"></p>
+			<p class="s4"></p>
+			<p class="s5"></p>
+			<p class="s6"></p>	
+			<p class="s7"></p>	
+			<p class="s8"></p>
+			<p class="s9"></p>
+			<p class="s10"></p>
+			<p class="s11"></p>
+			<p class="s12"></p>
+		</div>	
 	</div>	
+	<p class="s13"></p>
+</section>
+
+<section class="sec2"> 
+
 </section>
 
 <script>
@@ -80,17 +103,18 @@ $(document).ready(function () {
 		$(this).val('');
 	});
 	
-	$('.inp').on('keyup', function(e){
-		 
+	$('.inp').on('keyup', function(e){		 
 		if(/['А-я',':']/.test(this.value)) this.value='';
 		if(e.which == 13) $('.skno-status').click();
 	});
+	
+
 	
 	$('.skno-status').click( function() {
 	
 		hex = $('.inp').val();
 		hex2bin =  ((parseInt(hex, 16)).toString(2)).substr(-12);
-		
+	
 		$('p').css(' ');
 		
 		if ( hex.length < 4 ) {
@@ -190,19 +214,44 @@ $(document).ready(function () {
 				}
 
 				if ( hex2bin[0] == 0 ) {
-					$('.s12').html('СКНО не исправно');
+					$('.s12').html('СКНО не исправен');
 					$('.s12').css('color' , 'red');
 				} else {
-					$('.s12').html('СКНО исправно - ОК');
+					$('.s12').html('СКНО исправен - ОК');
 					$('.s12').css('color' , 'green');
 				}		
 
 				console.log(hex);
 				console.log(hex2bin);
+				
+				$('.s13').html('<span class="save"> сохранить значение</span>');
+				$('.s13').css('z-index' , '3');			
+
+				
 		}		
 					
 	});
 	
+	
+	if ( !isNaN($('.inp').val())) {
+		$('.s13').click( function() {
+				$('.sec2').css('display' , 'flex');
+				$('.sec2').prepend( "<div> ------------ </div>" );
+				
+				// $(".status-info p").each(function() {
+				//	$('.sec2').prepend( '<p>' + $(this).text() + '</p>');
+				// });
+				
+				var out = '';
+				$(".status-info p").each(function() { out += '<p>' + $(this).text() + '</p>' });
+				
+				$('.sec2').prepend(out);
+				
+				$('.sec2').prepend( '<b>' + $('.inp').val()  + '<b><br>');
+				$(this).css('z-index' , '-1');
+				return
+		});
+	};
 });	
 
 </script>
