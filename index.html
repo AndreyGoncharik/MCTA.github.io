@@ -53,6 +53,7 @@
 		.s13 span {
 			margin:7px auto;
 			border-bottom:1px dotted grey;
+			cursor:pointer;
 		}
 		.sec2 {			
 			display:none;
@@ -60,7 +61,11 @@
 		}
 		.sec2 p {
 			font-size:14px;
-		}		
+		}	
+
+		.cr {color: red;}
+		
+		.cg {color: green;}
 	</style>
 </head>
 <body>
@@ -75,30 +80,95 @@
 	</div>
 	<div class="result">	
 		<div class="status-info" style="width:100%;padding-left:10px;">
-			<p class="s1"></p>
-			<p class="s2"></p>
-			<p class="s3"></p>
-			<p class="s4"></p>
-			<p class="s5"></p>
-			<p class="s6"></p>	
-			<p class="s7"></p>	
-			<p class="s8"></p>
-			<p class="s9"></p>
-			<p class="s10"></p>
-			<p class="s11"></p>
-			<p class="s12"></p>
+		
 		</div>	
 	</div>	
 	<p class="s13"></p>
 </section>
 
-<section class="sec2"> 
+<section class="sec2"></section>
 
-</section>
 
 <script>
 $(document).ready(function () {
+	
+	var t = {
 
+		'11': {
+			"0": 'СКНО не исправен',
+			"1": 'СКНО исправен - ОК',
+		},				
+        '10': {
+            "0": 'Размер кассового док-та - ОК',
+            "1": 'Превышен размер кассового док.',
+        },
+        '9': {
+            "0": 'Док-ты из памяти СКНО переданы - ОК',
+            "1": 'В памяти СКНО есть непереданный док.',
+        },
+        '8': {
+            "0": 'Процедура передачи док-та - ОК',
+            "1": 'Не завершена процедура передачи док.',
+        },
+        '7': {
+            "0": 'Смена в СКНО закрыта',
+            "1": 'Смена в СКНО открыта',
+        },
+        '6': {
+            "0": 'Нет идентификации',
+            "1": 'Идентификациия - ОК',
+        },
+        '5': {
+            "0": 'Память СКНО - ОК',
+            "1": 'Переполнена память СКНО',
+        },
+        '4': {
+            "0": 'Z-отчёты - ОК',
+            "1": 'Не передан Z-отчёт',
+        },
+        '3': {
+            "0": 'Сертификат СКЗИ - ОК',
+            "1": 'Запрет сертификата СКЗИ',
+        },
+        '2': {
+            "0": 'Нет связи с сервером',
+            "1": 'Сервер - ОК',
+        },
+        '1': {
+            "0": 'СКЗИ нет',
+            "1": 'СКЗИ - ОК',
+        },
+		'0': {
+			"0": 'СКНО свободен',
+			"1": 'СКНО занят',
+		},
+	};
+	
+	function cDiv() {
+				$('.inf').each(function(indx, element) { 
+				
+					e = $(element); 
+					eh = $(element).html(); 
+					
+					if ( eh === t[0][0]) { e.addClass('cg');
+					} else if ( eh === t[0][1]) { e.addClass('cr');
+					} else if ( eh === t[1][0]) { e.addClass('cr');
+					} else if ( eh === t[2][0]) { $(element).addClass('cr');
+					} else if ( eh === t[2][1]) { $(element).addClass('cg');
+					} else if ( eh === t[3][1]) { $(element).addClass('cr');
+					} else if ( eh === t[4][1]) { $(element).addClass('cr');
+					} else if ( eh === t[5][1]) { $(element).addClass('cr');
+					} else if ( eh === t[6][0]) { $(element).addClass('cr');
+					} else if ( eh === t[7][0]) { $(element).addClass('cr');
+					} else if ( eh === t[7][1]) { $(element).addClass('cg');
+					} else if ( eh === t[8][1]) { $(element).addClass('cr');
+					} else if ( eh === t[10][1]) { $(element).addClass('cr');
+					} else if ( eh === t[11][0]) { $(element).addClass('cr');
+					} else if ( eh === t[11][1]) { $(element).addClass('cg');
+					}					
+				});
+	};
+	
 	$('.inp').click(function() {
 		$(this).val('');
 	});
@@ -108,147 +178,68 @@ $(document).ready(function () {
 		if(e.which == 13) $('.skno-status').click();
 	});
 	
-
-	
 	$('.skno-status').click( function() {
 	
-		hex = $('.inp').val();
-		hex2bin =  ((parseInt(hex, 16)).toString(2)).substr(-12);
-	
-		$('p').css(' ');
+		var hex = $('.inp').val();
+		var hex2bin = ("000000000000" + (parseInt(hex, 16)).toString(2)).substr(-12);
+		
+		$('.status-info p').removeClass('cr cb cg');
 		
 		if ( hex.length < 4 ) {
 			$('.status-info p').html('');
-			$('.s0').html('Введите 4 последних символа <br> из строки <b>raw status value </b>');
-			$('.s0').css('color' , 'green');
+			$('.s0').html('Введите 4 последних символа <br> из строки <b>raw status value </b>').addClass('cg');
+			$('.s13').html('');
 		} else if ( isNaN( hex2bin )){
 			$('.status-info p').html('');
-			$('.s0').html('Ошибка ввода значения</b>');
-			$('.s0').css('color' , 'red');
-		} else {
+			$('.s0').html('Ошибка ввода значения</b>').addClass('cr');
+			$('.s13').html('');
+		} else {	
 				
 				$('.s0').html(' ');
-			
-				if ( hex2bin[11] == 0 ) {
-					$('.s1').html('СКНО свободен');
-					$('.s1').css('color' , 'green');
-				} else {
-					$('.s1').html('СКНО занят');
-					$('.s1').css('color' , 'red');
-				}
-				
-				if ( hex2bin[10] == 0 ) {
-					$('.s2').html('СКЗИ нет');
-				} else {
-					$('.s2').html('СКЗИ - ОК');
-				}
-				
-				if ( hex2bin[9] == 0 ) {
-					$('.s3').html('Нет связи с сервером');
-					$('.s3').css('color' , 'red');
-				} else {
-					$('.s3').html('Сервер - ОК');
-					$('.s3').css('color' , 'green');
-				}
-				
-				if ( hex2bin[8] == 0 ) {
-					$('.s4').html('Сертификат СКЗИ - ОК');
-					$('.s4').css('color' , 'black');
-				} else {
-					$('.s4').html('Запрет сертификата СКЗИ');
-					$('.s4').css('color' , 'red');
-				}
-				
-				if ( hex2bin[7] == 0 ) {
-					$('.s5').html('Z-отчёты - ОК');
-					$('.s5').css('color' , 'black');
-				} else {
-					$('.s5').html('Не передан Z-отчёт');
-					$('.s5').css('color' , 'red');
-				}
-				
-				if ( hex2bin[6] == 0 ) {
-					$('.s6').html('Память СКНО - ОК');
-					$('.s6').css('color' , 'black');
-				} else {
-					$('.s6').html('Переполнена память СКНО');
-					$('.s6').css('color' , 'red');
-				}
-				
-				if ( hex2bin[5] == 0 ) {
-					$('.s7').html('Нет идентификации');
-					$('.s7').css('color' , 'red');
-				} else {
-					$('.s7').html('Идентификациия - ОК');
-					$('.s7').css('color' , 'black');
-				}
 
-				if ( hex2bin[4] == 0 ) {
-					$('.s8').html('Смена закрыта');
-				} else {
-					$('.s8').html('Смена открыта');
+				var out = '';
+				
+				var revH = '', i;
+				for (i = hex2bin.length - 1; i >= 0; i--) {
+					revH += hex2bin.charAt(i);
 				}
 				
-				if ( hex2bin[3] == 0 ) {
-					$('.s9').html('Процедура передачи док-та - ОК');
-					$('.s9').css('color' , 'black');
-				} else {
-					$('.s9').html('Не завершена процедура передачи док.');
-					$('.s9').css('color' , 'red');
-				}	
-				
-				if ( hex2bin[2] == 0 ) {
-					$('.s10').html('Док-ты из памяти СКНО переданы - ОК');
-					$('.s10').css('color' , 'black');
-				} else {
-					$('.s10').html('В памяти СКНО есть непереданный док.');
-					$('.s10').css('color' , 'red');
-				}	
-				
-				if ( hex2bin[1] == 0 ) {
-					$('.s11').html('Размер кассового док-та - ОК');
-					$('.s11').css('color' , 'black');
-				} else {
-					$('.s11').html('Превышен размер кассового док.');
-					$('.s11').css('color' , 'red');
+				for(var index in revH) { 
+					var attr2 = revH[index];
+					var hexO = attr2 == 0 ? (t[index][0]) : (t[index][1]);	
+					out += '<p class="inf">' + hexO + '</p>';
 				}
-
-				if ( hex2bin[0] == 0 ) {
-					$('.s12').html('СКНО не исправен');
-					$('.s12').css('color' , 'red');
-				} else {
-					$('.s12').html('СКНО исправен - ОК');
-					$('.s12').css('color' , 'green');
-				}		
+				
+				$('.result .status-info').html(out);
 
 				console.log(hex);
 				console.log(hex2bin);
 				
 				$('.s13').html('<span class="save"> сохранить значение</span>');
-				$('.s13').css('z-index' , '3');			
-
+				$('.s13').css('z-index' , '3');	
 				
+				cDiv();
+				
+
+
 		}		
-					
 	});
-	
 	
 	if ( !isNaN($('.inp').val())) {
 		$('.s13').click( function() {
 				$('.sec2').css('display' , 'flex');
-				$('.sec2').prepend( "<div> ------------ </div>" );
-				
-				// $(".status-info p").each(function() {
-				//	$('.sec2').prepend( '<p>' + $(this).text() + '</p>');
-				// });
+				$('.sec2').prepend( "<div> ------------ </div>" );		
 				
 				var out = '';
-				$(".status-info p").each(function() { out += '<p>' + $(this).text() + '</p>' });
+				$(".status-info p").each(function() { out += '<p class="inf">' + $(this).text() + '</p>' });
 				
 				$('.sec2').prepend(out);
 				
-				$('.sec2').prepend( '<b>' + $('.inp').val()  + '<b><br>');
+				$('.sec2').prepend( '<p style="text-transform:uppercase; font-weight:800;font-size:16px;">' + $('.inp').val()  + '</p>');
 				$(this).css('z-index' , '-1');
+				
+				cDiv();
+				
 				return
 		});
 	};
