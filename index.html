@@ -1,17 +1,17 @@
 <!doctype html>
 <html lang="ru">
-<head>   
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	
+
     <title>getStatus psMCTA</title>
-	
+
 	<!-- <link rel="manifest" href="/manifest.json"> -->
-	
+
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-	
-	<style>	
-		body {		    
+
+	<style>
+		body {
             font-family: Roboto;
             display: flex;
             flex-direction: column;
@@ -48,41 +48,41 @@
 			height:30px;
 			}
 		.s13 {
-			text-align:center;			
+			text-align:center;
 		}
 		.s13 span {
 			margin:7px auto;
 			border-bottom:1px dotted grey;
 			cursor:pointer;
 		}
-		.sec2 {			
+		.sec2 {
 			display:none;
 			padding:15px;
 		}
 		.sec2 p {
 			font-size:14px;
-		}	
+		}
 
 		.cr {color: red;}
-		
+
 		.cg {color: green;}
 	</style>
 </head>
 <body>
-<section style="">  	
+<section style="">
 	<div style="width:100%;text-align:center;">
 		<p style="margin-bottom:10px;">psMCTA.log <br> raw status value: </p>
 		<label>0x <input class="inp" type="text" maxlength="4" style="text-transform:uppercase" ></input></label><br>
 		<button class="skno-status"> Get status</button>
-	</div>	
+	</div>
 	<div class="status-info" style="width:100%;">
 		<p class="s0" style="text-align:center"></p>
 	</div>
-	<div class="result">	
+	<div class="result">
 		<div class="status-info" style="width:100%;padding-left:10px;">
-		
-		</div>	
-	</div>	
+
+		</div>
+	</div>
 	<p class="s13"></p>
 </section>
 
@@ -91,13 +91,13 @@
 
 <script>
 $(document).ready(function () {
-	
+
 	var t = {
 
 		'11': {
 			"0": 'СКНО не исправен',
 			"1": 'СКНО исправен - ОК',
-		},				
+		},
         '10': {
             "0": 'Размер кассового док-та - ОК',
             "1": 'Превышен размер кассового док.',
@@ -143,48 +143,48 @@ $(document).ready(function () {
 			"1": 'СКНО занят',
 		},
 	};
-	
+
 	function cDiv() {
-				$('.inf').each(function(indx, element) { 
-				
-					e = $(element); 
-					eh = $(element).html(); 
-					
+				$('.inf').each(function(indx, element) {
+
+					e = $(element);
+					eh = $(element).html();
+
 					if ( eh === t[0][0]) { e.addClass('cg');
 					} else if ( eh === t[0][1]) { e.addClass('cr');
 					} else if ( eh === t[1][0]) { e.addClass('cr');
-					} else if ( eh === t[2][0]) { $(element).addClass('cr');
-					} else if ( eh === t[2][1]) { $(element).addClass('cg');
-					} else if ( eh === t[3][1]) { $(element).addClass('cr');
-					} else if ( eh === t[4][1]) { $(element).addClass('cr');
-					} else if ( eh === t[5][1]) { $(element).addClass('cr');
-					} else if ( eh === t[6][0]) { $(element).addClass('cr');
-					} else if ( eh === t[7][0]) { $(element).addClass('cr');
-					} else if ( eh === t[7][1]) { $(element).addClass('cg');
-					} else if ( eh === t[8][1]) { $(element).addClass('cr');
-					} else if ( eh === t[10][1]) { $(element).addClass('cr');
-					} else if ( eh === t[11][0]) { $(element).addClass('cr');
-					} else if ( eh === t[11][1]) { $(element).addClass('cg');
-					}					
+					} else if ( eh === t[2][0]) { e.addClass('cr');
+					} else if ( eh === t[2][1]) { e.addClass('cg');
+					} else if ( eh === t[3][1]) { e.addClass('cr');
+					} else if ( eh === t[4][1]) { e.addClass('cr');
+					} else if ( eh === t[5][1]) { e.addClass('cr');
+					} else if ( eh === t[6][0]) { e.addClass('cr');
+					} else if ( eh === t[7][0]) { e.addClass('cr');
+					} else if ( eh === t[7][1]) { e.addClass('cg');
+					} else if ( eh === t[8][1]) { e.addClass('cr');
+					} else if ( eh === t[10][1]) { e.addClass('cr');
+					} else if ( eh === t[11][0]) { e.addClass('cr');
+					} else if ( eh === t[11][1]) { e.addClass('cg');
+					}
 				});
 	};
-	
+
 	$('.inp').click(function() {
 		$(this).val('');
 	});
-	
-	$('.inp').on('keyup', function(e){		 
+
+	$('.inp').on('keyup', function(e){
 		if(/['А-я',':']/.test(this.value)) this.value='';
 		if(e.which == 13) $('.skno-status').click();
 	});
-	
+
 	$('.skno-status').click( function() {
-	
+
 		var hex = $('.inp').val();
 		var hex2bin = ("000000000000" + (parseInt(hex, 16)).toString(2)).substr(-12);
-		
+
 		$('.status-info p').removeClass('cr cb cg');
-		
+
 		if ( hex.length < 4 ) {
 			$('.status-info p').html('');
 			$('.s0').html('Введите 4 последних символа <br> из строки <b>raw status value </b>').addClass('cg');
@@ -193,57 +193,55 @@ $(document).ready(function () {
 			$('.status-info p').html('');
 			$('.s0').html('Ошибка ввода значения</b>').addClass('cr');
 			$('.s13').html('');
-		} else {	
-				
+		} else {
+
 				$('.s0').html(' ');
 
 				var out = '';
-				
+
 				var revH = '', i;
 				for (i = hex2bin.length - 1; i >= 0; i--) {
 					revH += hex2bin.charAt(i);
 				}
-				
-				for(var index in revH) { 
+
+				for(var index in revH) {
 					var attr2 = revH[index];
-					var hexO = attr2 == 0 ? (t[index][0]) : (t[index][1]);	
+					var hexO = attr2 == 0 ? (t[index][0]) : (t[index][1]);
 					out += '<p class="inf">' + hexO + '</p>';
 				}
-				
+
 				$('.result .status-info').html(out);
 
 				console.log(hex);
 				console.log(hex2bin);
-				
+
 				$('.s13').html('<span class="save"> сохранить значение</span>');
-				$('.s13').css('z-index' , '3');	
-				
+				$('.s13').css('z-index' , '3');
+
 				cDiv();
-				
 
-
-		}		
+		}
 	});
-	
+
 	if ( !isNaN($('.inp').val())) {
 		$('.s13').click( function() {
 				$('.sec2').css('display' , 'flex');
-				$('.sec2').prepend( "<div> ------------ </div>" );		
-				
+				$('.sec2').prepend( "<div> ------------ </div>" );
+
 				var out = '';
 				$(".status-info p").each(function() { out += '<p class="inf">' + $(this).text() + '</p>' });
-				
+
 				$('.sec2').prepend(out);
-				
+
 				$('.sec2').prepend( '<p style="text-transform:uppercase; font-weight:800;font-size:16px;">' + $('.inp').val()  + '</p>');
 				$(this).css('z-index' , '-1');
-				
+
 				cDiv();
-				
+
 				return
 		});
 	};
-});	
+});
 
 </script>
 </body>
