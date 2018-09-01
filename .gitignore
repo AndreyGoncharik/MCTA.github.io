@@ -7,3 +7,4 @@ package.json
 manifest.json
 sw-toolbox.js
 sw.js
+.vscode/
