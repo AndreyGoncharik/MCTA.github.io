@@ -62,10 +62,42 @@
 		.sec2 p {
 			font-size:14px;
 		}
+		.sec3 {
+			padding:15px;
+		}
+		.sec3 p {
+			font-size:14px;
+		}
 
 		.cr {color: red;}
 
 		.cg {color: green;}
+
+		.result {
+			display: flex;
+			justify-content: space-between;
+			padding: 8px 0 4px 0;
+		}
+
+		.result h4{
+			font-weight: 500; 
+			margin: 0;
+			font-size: 14px;
+		}
+
+		.result h5{
+			font-weight: 400;
+			margin: 0;
+			font-size: 11px;
+			color:#a7a7a7;
+			display: flex;
+    		align-items: flex-end;
+		}
+
+		.result-title, .result-desc {
+			font-size: 14px;
+			padding-bottom:4px;
+		}
 	</style>
 </head>
 <body>
@@ -87,6 +119,12 @@
 </section>
 
 <section class="sec2"></section>
+
+<section class="sec3">
+	<h4 style="margin-top: 0;text-align: center;"></h3>
+	<div class="wrap"></div>
+	<div class="edit"></div>
+</section>
 
 
 <script>
@@ -241,6 +279,36 @@ $(document).ready(function () {
 				return
 		});
 	};
+
+	$.getJSON( "https://spreadsheets.google.com/feeds/list/12fNn4gGPUaOtn4NR80um6gzyL5n3IazLMHB6k0aD5K4/od6/public/values?alt=json", function(data){
+            data = data['feed']['entry'];
+            showErr(data);
+	});
+	function showErr(data){
+            var out2 = ' ';
+            for (var i = 0; i < data.length; i++){
+				var r = data[i]['gsx$result']['$t'];
+				var e = data[i]['gsx$err']['$t'];
+                var t = data[i]['gsx$title']['$t'];
+				var o = data[i]['gsx$desc']['$t'];
+				console.log(t);
+
+				if (r != '') {
+				out2 += `<div class="inner"> `;	
+					out2 += `<div class="result"><h4>result: ${r}</h4><h5>${e}</h5></div>`;
+                    out2 += `<div class="item-block"> `;						
+						out2 += `<div class="result-title">${t}</div>`;
+						out2 += `<div class="result-desc"> ${o}</div>`;
+						out2 += `<div style="border-bottom: 1px solid #e6e6e69e"></div> `;
+					out2 += `</div>`;
+				out2 += `</div> `;	
+                }
+            }
+			$('.sec3 h4').html('Расшифровка кодов СКНО');
+			$('.wrap').html(out2);
+	};
+	$('.sec3 .edit').html('<a href="https://docs.google.com/spreadsheets/d/12fNn4gGPUaOtn4NR80um6gzyL5n3IazLMHB6k0aD5K4/edit#gid=0" style="color:#c2c2c2">edit</a>');
+
 });
 
 </script>
