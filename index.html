@@ -32,8 +32,8 @@
 			box-sizing: border-box;
             }
 		p {
-			 margin:2px 0;
-			 font-size:16px;
+			margin:2px 0;
+			font-size:16px;
 			}
 		label, input {
 			font-size:25px;
@@ -100,11 +100,14 @@
 		}
 	</style>
 </head>
+
+
 <body>
-<section style="">
+<section>
 	<div style="width:100%;text-align:center;">
+		<h2></h2>
 		<p style="margin-bottom:10px;">psMCTA.log <br> raw status value: </p>
-		<label>0x <input class="inp" type="text" maxlength="4" style="text-transform:uppercase" ></label><br>
+		<label>0x <input class="inp" type="text" maxlength="4" style="text-transform:uppercase"></label><br>
 		<button class="skno-status"> Get status</button>
 	</div>
 	<div class="status-info" style="width:100%;">
@@ -112,7 +115,7 @@
 	</div>
 	<div class="result">
 		<div class="status-info" style="width:100%;padding-left:10px;">
-
+	
 		</div>
 	</div>
 	<p class="s13"></p>
@@ -121,17 +124,19 @@
 <section class="sec2"></section>
 
 <section class="sec3">
-	<h4 style="margin-top: 0;text-align: center;"></h3>
-	<div class="wrap"></div>
-	<div class="edit" style="padding-top: 10px;text-align:center;"> </div>
-	<div class="update"></div>
+	<h4 style="margin-top: 0;text-align: center;"></h4>
+		<div class="wrap"></div>
+		<div class="edit" style="padding-top: 10px;text-align:center;"> </div>
+		<div class="update"></div>
 </section>
 
 
 <script>
-$(document).ready(function () {
+document.addEventListener("DOMContentLoaded", function(event) {
 
-	var t = {
+	let inp = document.querySelector('.inp');
+	let sknoBut = document.querySelector('.skno-status');
+	const t = {
 
 		'11': {
 			"0": 'СКНО не исправен',
@@ -183,11 +188,13 @@ $(document).ready(function () {
 		},
 	};
 
+
 	function cDiv() {
+
 				$('.inf').each(function(indx, element) {
 
-					e = $(element);
-					eh = $(element).html();
+				 	e = $(element);
+				 	eh = $(element).html();
 
 					if ( eh === t[0][0]) { e.addClass('cg');
 					} else if ( eh === t[0][1]) { e.addClass('cr');
@@ -208,16 +215,15 @@ $(document).ready(function () {
 				});
 	};
 
-	$('.inp').click(function() {
-		$(this).val('');
-	});
+	inp.onfocus = function() { this.value='' };
 
-	$('.inp').on('keyup', function(e){
+	inp.onkeyup = function(e){
 		if(/['А-я',':']/.test(this.value)) this.value='';
-		if(e.which == 13) $('.skno-status').click();
-	});
+		if(e.which == 13) sknoBut.click();
+	};
+	
 
-	$('.skno-status').click( function() {
+	$('.skno-status').on("click", function() {
 
 		var hex = $('.inp').val();
 		var hex2bin = ("000000000000" + (parseInt(hex, 16)).toString(2)).substr(-12);
@@ -256,9 +262,8 @@ $(document).ready(function () {
 
 				$('.s13').html('<span class="save"> сохранить значение</span>');
 				$('.s13').css('z-index' , '3');
-
+				
 				cDiv();
-
 		}
 	});
 
@@ -268,7 +273,7 @@ $(document).ready(function () {
 				$('.sec2').prepend( "<div> ------------ </div>" );
 
 				var out = '';
-				$(".status-info p").each(function() { out += '<p class="inf">' + $(this).text() + '</p>' });
+				$(".status-info p").each(function() { out += `<p class="inf">${$(this).text()}</p>` });
 
 				$('.sec2').prepend(out);
 
@@ -276,8 +281,6 @@ $(document).ready(function () {
 				$(this).css('z-index' , '-1');
 
 				cDiv();
-
-				return
 		});
 	};
 
@@ -286,29 +289,36 @@ $(document).ready(function () {
 			showErr(data);
 	});
 	function showErr(data){
-            var out2 = ' ';
-            for (var i = 0; i < data.length; i++){
+
+        var out2 = ' ';
+
+        for (var i = 0; i < data.length; i++){
 				var r = data[i]['gsx$result']['$t'];
 				var e = data[i]['gsx$err']['$t'];
                 var t = data[i]['gsx$title']['$t'];
 				var o = data[i]['gsx$desc']['$t'];
 
-				if (r != '') {
-				out2 += `<div class="inner"> `;	
-					out2 += `<div class="result"><h4>result: ${r}</h4><h5>${e}</h5></div>`;
-                    out2 += `<div class="item-block"> `;						
-						out2 += `<div class="result-title">${t}</div>`;
-						out2 += `<div class="result-desc"> ${o}</div>`;
-						out2 += `<div style="border-bottom: 1px solid #e6e6e69e"></div> `;
-					out2 += `</div>`;
-				out2 += `</div> `;	
-                }
-            }
+			if (r != '') {
+				out2 += `<div class="inner"> `;
+				out2 += `<div class="result"><h4>result: ${r}</h4><h5>${e}</h5></div>`;
+				out2 += `<div class="item-block"> `;
+				out2 += `<div class="result-title">${t}</div>`;
+				out2 += `<div class="result-desc"> ${o}</div>`;
+				out2 += `<div style="border-bottom: 1px solid #e6e6e69e"></div> `;
+				out2 += `</div>`;
+				out2 += `</div> `;
+			}
+        }
+	
 			$('.sec3 h4').html('Расшифровка кодов СКНО');
 			$('.wrap').html(out2);
 			$('.sec3 .edit').html('<a href="https://docs.google.com/spreadsheets/d/12fNn4gGPUaOtn4NR80um6gzyL5n3IazLMHB6k0aD5K4/edit#gid=0" target="blank_" style="color:#c2c2c2; font-size:12px;text-decoration:none;">Last update ' + data[0]['updated']['$t'].substr(0,10) + '</a>');
 	};
+	
 });
+
+
+
 
 </script>
 </body>
