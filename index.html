@@ -241,7 +241,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	inp.onfocus = function() { this.value='' };
 
 	inp.onkeyup = function(e){
-		if(/['А-я',':']/.test(this.value)) this.value='';
+		if(/['А-я','?!< > / \? /\. , `~" ' \}\{\]\[\|\\oO$']/.test(this.value)) this.value='';
 		if(e.which == 13) sknoBut.click();
 	};
 	
