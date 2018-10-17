@@ -150,7 +150,9 @@
 <section class="sec4">
 	<h4 style="margin-top: 0;text-align: center;">MSTA</h4>
 
-	<img src="img/msta.jpg" alt="">
+	<img src="img/msta.webp" alt="" style="width:100%; height: auto;">
+
+	
 </section>
 
 
@@ -238,11 +240,25 @@ document.addEventListener("DOMContentLoaded", function(event) {
 				});
 	};
 
-	inp.onfocus = function() { this.value='' };
+	inp.onfocus = function() { 
+		this.value='';
+		$('.s0').html('');
+		
+		 };
 
 	inp.onkeyup = function(e){
-		if(/['А-я','?!< > / \? /\. , `~" ' \}\{\]\[\|\\oO$']/.test(this.value)) this.value='';
-		if(e.which == 13) sknoBut.click();
+		if(!/^['0-9 A-N P-Z a-n p-z']+$/.test(this.value)) {
+			this.value='err';			
+			this.blur();
+			$('.status-info p').html('');
+			$('.s0').html('Введен неверный символ').addClass('cg');
+			$('.s13').html('');
+			
+		}
+		if(e.which == 13) {
+			sknoBut.click();
+			this.blur();
+		}
 	};
 	
 
