@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>getStatus psMCTA</title>
+
+	<!-- <link rel="manifest" href="/manifest.json"> -->
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+	<style>
+		body {
+            font-family: Roboto;
+            display: flex;
+            flex-direction: column;
+            min-height: 85vh;
+			background-color:#c2c2c20d;
+			box-sizing: border-box;
+            }
+        section {
+            display:flex;
+			flex-direction:column;
+            width: 95vw ;
+			max-width:340px !important;
+            min-height: 420px;
+            background-color:#fff;
+			box-shadow: 0 -2px 6px rgba(14,21,47,.02), 0 6px 18px rgba(14,21,47,.05);
+            padding: 15px 5px;
+            margin: 10px auto;
+			box-sizing: border-box;
+            }
+		p {
+			margin:2px 0;
+			font-size:16px;
+			}
+		label, input {
+			font-size:25px;
+		}
+		input {
+			max-width:80px;
+			text-align:center;
+			border: 0;
+			border-bottom: 1px solid #c2c2c2;
+			outline: 0;
+			}
+		.skno-status {
+			width: 150px;
+			height: 40px;
+			border-radius: 40px;
+			text-decoration: none;
+			text-align: center;
+			position: relative;
+			font-size: 15px;
+			margin: 15px auto 10px auto;
+			background-color: #fff;
+			color: #0c0c0c;
+			box-shadow: 0 2px 5px rgba(194,194,194, .5);
+			transition: .3s;
+			outline: 0;
+			border: 1px solid #c2c2c2;
+		}
+		.skno-status:active {
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.0);
+		}
+		.s13 {
+			text-align:center;
+		}
+		.s13 span {
+			margin:7px auto;
+			border-bottom:1px dotted grey;
+			cursor:pointer;
+		}
+		.sec2 {
+			display:none;
+			padding:15px;
+		}
+		.sec2 p {
+			font-size:14px;
+		}
+		.sec3 {
+			padding:15px;
+		}
+		.sec3 p {
+			font-size:14px;
+		}
+
+		.cr {color: red;}
+
+		.cg {color: green;}
+
+		.result {
+			display: flex;
+			justify-content: space-between;
+			padding: 8px 0 4px 0;
+		}
+
+		.result h4{
+			font-weight: 500; 
+			margin: 0;
+			font-size: 16px;
+		}
+
+		.result h5{
+			font-weight: 400;
+			margin: 0;
+			font-size: 11px;
+			color:#a7a7a7;
+			display: flex;
+    		align-items: flex-end;
+		}
+
+		.result-title, .result-desc {
+			font-size: 14px;
+			padding-bottom:4px;
+		}
+	</style>
+</head>
+
+
+<body>
+<section>
+	<div style="width:100%;text-align:center;">
+		<h2></h2>
+		<p style="margin-bottom:10px;">psMCTA.log <br> raw status value: </p>
+		<label>0x <input class="inp" type="text" maxlength="4" style="text-transform:uppercase"></label><br>
+		<button class="skno-status"> Get status</button>
+	</div>
+	<div class="status-info" style="width:100%;">
+		<p class="s0" style="text-align:center"></p>
+	</div>
+	<div class="result">
+		<div class="status-info" style="width:100%;padding-left:10px;">
+	
+		</div>
+	</div>
+	<p class="s13"></p>
+</section>
+
+<section class="sec2"></section>
+
+<section class="sec3">
+	<h4 style="margin-top: 0;text-align: center;"></h4>
+		<div class="wrap"></div>
+		<div class="edit" style="padding-top: 10px;text-align:center;"> </div>
+		<div class="update"></div>
+</section>
+
+<section class="sec4">
+	<h4 style="margin-top: 0;text-align: center;">MSTA</h4>
+
+	<img src="img/msta.webp" alt="" style="width:100%; height: auto;">
+
+	
+</section>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function(event) {
+
+	let inp = document.querySelector('.inp');
+	let sknoBut = document.querySelector('.skno-status');
+	const t = {
+
+		'11': {
+			"0": 'СКНО не исправен',
+			"1": 'СКНО исправен - ОК',
+		},
+        '10': {
+            "0": 'Размер кассового док-та - ОК',
+            "1": 'Превышен размер кассового док.',
+        },
+        '9': {
+            "0": 'Док-ты из памяти СКНО переданы - ОК',
+            "1": 'В памяти СКНО есть непереданный док.',
+        },
+        '8': {
+            "0": 'Процедура передачи док-та - ОК',
+            "1": 'Не завершена процедура передачи док.',
+        },
+        '7': {
+            "0": 'Смена в СКНО закрыта',
+            "1": 'Смена в СКНО открыта',
+        },
+        '6': {
+            "0": 'Нет идентификации',
+            "1": 'Идентификациия - ОК',
+        },
+        '5': {
+            "0": 'Память СКНО - ОК',
+            "1": 'Переполнена память СКНО',
+        },
+        '4': {
+            "0": 'Z-отчёты - ОК',
+            "1": 'Не передан Z-отчёт',
+        },
+        '3': {
+            "0": 'Сертификат СКЗИ - ОК',
+            "1": 'Запрет сертификата СКЗИ',
+        },
+        '2': {
+            "0": 'Нет связи с сервером',
+            "1": 'Сервер - ОК',
+        },
+        '1': {
+            "0": 'Модуль СКЗИ - ошибка',
+            "1": 'Модуль СКЗИ - ОК',
+        },
+		'0': {
+			"0": 'СКНО свободен',
+			"1": 'СКНО занят',
+		},
+	};
+
+
+	function cDiv() {
+
+				$('.inf').each(function(indx, element) {
+
+				 	e = $(element);
+				 	eh = $(element).html();
+
+					if ( eh === t[0][0]) { e.addClass('cg');
+					} else if ( eh === t[0][1]) { e.addClass('cr');
+					} else if ( eh === t[1][0]) { e.addClass('cr');
+					} else if ( eh === t[2][0]) { e.addClass('cr');
+					} else if ( eh === t[2][1]) { e.addClass('cg');
+					} else if ( eh === t[3][1]) { e.addClass('cr');
+					} else if ( eh === t[4][1]) { e.addClass('cr');
+					} else if ( eh === t[5][1]) { e.addClass('cr');
+					} else if ( eh === t[6][0]) { e.addClass('cr');
+					} else if ( eh === t[7][0]) { e.addClass('cr');
+					} else if ( eh === t[7][1]) { e.addClass('cg');
+					} else if ( eh === t[8][1]) { e.addClass('cr');
+					} else if ( eh === t[10][1]) { e.addClass('cr');
+					} else if ( eh === t[11][0]) { e.addClass('cr');
+					} else if ( eh === t[11][1]) { e.addClass('cg');
+					}
+				});
+	};
+
+	inp.onfocus = function() { 
+		this.value='';
+		$('.s0').html('');
+		
+		 };
+
+	inp.onkeyup = function(e){
+		if(!/^['0-9 A-N P-Z a-n p-z']+$/.test(this.value)) {
+			this.value='err';			
+			this.blur();
+			$('.status-info p').html('');
+			$('.s0').html('Введен неверный символ').addClass('cg');
+			$('.s13').html('');
+			
+		}
+		if(e.which == 13) {
+			sknoBut.click();
+			this.blur();
+		}
+	};
+	
+
+	$('.skno-status').on("click", function() {
+
+		var hex = $('.inp').val();
+		var hex2bin = ("000000000000" + (parseInt(hex, 16)).toString(2)).substr(-12);
+
+		$('.status-info p').removeClass('cr cb cg');
+
+		if ( hex.length < 4 ) {
+			$('.status-info p').html('');
+			$('.s0').html('Введите 4 последних символа <br> из строки <b>raw status value </b>').addClass('cg');
+			$('.s13').html('');
+		} else if ( isNaN( hex2bin )){
+			$('.status-info p').html('');
+			$('.s0').html('Ошибка ввода значения</b>').addClass('cr');
+			$('.s13').html('');
+		} else {
+
+				$('.s0').html(' ');
+
+				var out = '';
+
+				var revH = '', i;
+				for (i = hex2bin.length - 1; i >= 0; i--) {
+					revH += hex2bin.charAt(i);
+				}
+
+				for(var index in revH) {
+					var attr2 = revH[index];
+					var hexO = attr2 == 0 ? (t[index][0]) : (t[index][1]);
+					out += '<p class="inf">' + hexO + '</p>';
+				}
+
+				$('.result .status-info').html(out);
+
+				console.log(hex);
+				console.log(hex2bin);
+
+				$('.s13').html('<span class="save"> сохранить значение</span>');
+				$('.s13').css('z-index' , '3');
+				
+				cDiv();
+		}
+	});
+
+	if ( !isNaN($('.inp').val())) {
+		$('.s13').click( function() {
+				$('.sec2').css('display' , 'flex');
+				$('.sec2').prepend( "<div> ------------ </div>" );
+
+				var out = '';
+				$(".status-info p").each(function() { out += `<p class="inf">${$(this).text()}</p>` });
+
+				$('.sec2').prepend(out);
+
+				$('.sec2').prepend( '<p style="text-transform:uppercase; font-weight:800;font-size:16px;">' + $('.inp').val()  + '</p>');
+				$(this).css('z-index' , '-1');
+
+				cDiv();
+		});
+	};
+
+	$.getJSON( "https://spreadsheets.google.com/feeds/list/12fNn4gGPUaOtn4NR80um6gzyL5n3IazLMHB6k0aD5K4/od6/public/values?alt=json", function(data){
+            data = data['feed']['entry'];
+			showErr(data);
+	});
+	function showErr(data){
+
+        var out2 = ' ';
+
+        for (var i = 0; i < data.length; i++){
+				var r = data[i]['gsx$result']['$t'];
+				var e = data[i]['gsx$err']['$t'];
+                var t = data[i]['gsx$title']['$t'];
+				var o = data[i]['gsx$desc']['$t'];
+
+			if (r != '') {
+				out2 += `<div class="inner"> `;
+				out2 += `<div class="result"><h4>result: ${r}</h4><h5>${e}</h5></div>`;
+				out2 += `<div class="item-block"> `;
+				out2 += `<div class="result-title">${t}</div>`;
+				out2 += `<div class="result-desc"> ${o}</div>`;
+				out2 += `<div style="border-bottom: 1px solid #e6e6e69e"></div> `;
+				out2 += `</div>`;
+				out2 += `</div> `;
+			}
+        }
+	
+			$('.sec3 h4').html('Расшифровка кодов СКНО');
+			$('.wrap').html(out2);
+			$('.sec3 .edit').html('<a href="https://docs.google.com/spreadsheets/d/12fNn4gGPUaOtn4NR80um6gzyL5n3IazLMHB6k0aD5K4/edit#gid=0" target="blank_" style="color:#c2c2c2; font-size:12px;text-decoration:none;">Last update ' + data[0]['updated']['$t'].substr(0,10) + '</a>');
+	};
+	
+});
+
+
+
+
+</script>
+</body>
+
+<!-- <script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').then(function(registration) {
+      // Registration was successful
+      console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    }, function(err) {
+      // registration failed :(
+      console.log('ServiceWorker registration failed: ', err);
+    });
+  });
+}
+
+
+
+</script> -->
+</html>
